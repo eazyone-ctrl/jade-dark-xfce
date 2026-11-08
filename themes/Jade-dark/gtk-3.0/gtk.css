@@ -8980,8 +8980,9 @@ radio { border-radius: 9999px; }
 /* suwaki i postęp */
 progressbar trough, progressbar progress, scale trough, scale highlight, scale fill, switch, switch slider,
 scrollbar slider { border-radius: 9999px; }
-/* przyciski w grupach bez ścieżki folderów: to samo tło co pole obok */
-.linked:not(.vertical):not(.path-bar) > button, combobox > .linked:not(.vertical) > button { background-color: #142620; border: none; box-shadow: none; }
+/* przyciski w grupach bez ścieżki folderów: to samo tło co pole obok; przezroczysta
+   ramka 1 px zostaje, żeby przycisk nie rósł, gdy po najechaniu ramka dostaje kolor */
+.linked:not(.vertical):not(.path-bar) > button, combobox > .linked:not(.vertical) > button { background-color: #142620; border: 1px solid transparent; box-shadow: none; }
 .linked:not(.vertical):not(.path-bar) > button:hover, combobox > .linked:not(.vertical) > button:hover { background-color: #1e2d27; }
 .linked:not(.vertical):not(.path-bar) > entry, combobox > .linked:not(.vertical) > entry { background-color: #142620; border: none; box-shadow: none; }
 notebook.frame, frame.view, scrolledwindow.frame, textview, textview text, .frame { border-radius: 6px; }
