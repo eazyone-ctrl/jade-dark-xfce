@@ -51,6 +51,9 @@ EFFECT_SOLID = 1
 MIN_SATURATION = 0.75  # kolory motywow sa stonowane; na LED-ach wygladalyby na biale
 GREY_BELOW = 0.12  # motyw bez wyraznego akcentu -> biale podswietlenie
 POLL_SECONDS = 5
+# Po wybudzeniu kontroler wentylatorow przyjmuje kolor, ale gubi go, dopoki sie nie
+# rozgrzeje, wiec kolory sa wysylane jeszcze kilka razy (sekundy po wybudzeniu).
+RESUME_RESYNC_SECONDS = (5, 15, 30)
 
 HOME = os.path.expanduser("~")
 THEME_DIRS = [f"{HOME}/.themes", f"{HOME}/.local/share/themes", "/usr/share/themes"]
@@ -339,6 +342,11 @@ def sync_once():
         sys.exit(1)
 
 
+def seconds_asleep():
+    """Czas uspienia od startu systemu: CLOCK_BOOTTIME liczy uspienie, monotonic nie."""
+    return time.clock_gettime(time.CLOCK_BOOTTIME) - time.monotonic()
+
+
 def monitor():
     return subprocess.Popen(
         ["xfconf-query", "-c", "xsettings", "-p", "/Net/ThemeName", "-m"],
@@ -365,6 +373,9 @@ def run_daemon():
     applied_at = {}
     errors = {}
     pending = set(OUTPUTS)
+    refresh = set()
+    asleep = seconds_asleep()
+    resyncs = []
     try:
         while True:
             ready, _, _ = select.select([watcher.stdout], [], [], POLL_SECONDS)
@@ -373,6 +384,14 @@ def run_daemon():
                     watcher.wait()
                     watcher = monitor()
                 pending = set(OUTPUTS)
+            now_asleep = seconds_asleep()
+            if now_asleep - asleep > 1:
+                print("wybudzenie: kolory zostana wyslane ponownie", flush=True)
+                resyncs = [time.monotonic() + delay for delay in RESUME_RESYNC_SECONDS]
+            asleep = now_asleep
+            if resyncs and time.monotonic() >= resyncs[0]:
+                resyncs.pop(0)
+                refresh = set(OUTPUTS)
             try:
                 sync_color_scheme()
             except (OSError, subprocess.CalledProcessError) as error:
@@ -382,7 +401,8 @@ def run_daemon():
                 if not signature:
                     continue
                 changed = output in pending or signature != applied_to.get(output)
-                stale = output.keepalive and time.monotonic() - applied_at.get(output, 0) >= output.keepalive
+                stale = output in refresh or (
+                    output.keepalive and time.monotonic() - applied_at.get(output, 0) >= output.keepalive)
                 if not changed and not stale:
                     continue
                 try:
@@ -390,6 +410,7 @@ def run_daemon():
                     applied_to[output] = signature
                     applied_at[output] = time.monotonic()
                     pending.discard(output)
+                    refresh.discard(output)
                     errors.pop(output, None)
                 except (OSError, subprocess.CalledProcessError) as error:
                     if errors.get(output) != str(error):  # kazdy blad zglaszany tylko raz
