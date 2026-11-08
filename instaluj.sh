@@ -86,8 +86,8 @@ cp config/xfce-education.directory ~/.local/share/desktop-directories/
 # Alsamixer ma inną ikonę niż Sterowanie głośnością
 [ -f /usr/share/applications/alsamixer.desktop ] && sed "s/^Icon=.*/Icon=jade-alsamixer/" /usr/share/applications/alsamixer.desktop > ~/.local/share/applications/alsamixer.desktop
 
-T=~/Obrazy/Tapety/jade-horse-2
-[ -d ~/Obrazy ] || T=~/Pictures/Wallpapers/jade-horse-2
+T=~/Obrazy/Tapety/cyberpunk
+[ -d ~/Obrazy ] || T=~/Pictures/Wallpapers/cyberpunk
 say "Tapety -> $T"
 mkdir -p "$T"; cp tapety/* "$T/"
 

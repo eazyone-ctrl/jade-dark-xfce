@@ -105,7 +105,7 @@ i zaloguj ponownie.
 
 - **Cień i przygaszanie:** `~/.config/picom/picom.conf` (`shadow-color`, `shadow-radius` na górze pliku, `dim` w regułach). Po zmianie przeładuj picom: `~/.local/bin/zaokraglone-rogi on`.
   Po każdym przeładowaniu picom uruchom ponownie LibreWolf, bo inaczej jego menu mają czarne rogi.
-- **Inna tapeta:** *Ustawienia → Pulpit*, tapety leżą w `~/Obrazy/Tapety/jade-horse-2`.
+- **Inna tapeta:** *Ustawienia → Pulpit*, tapety leżą w `~/Obrazy/Tapety/cyberpunk`.
 - **Liczba pulpitów:** *Ustawienia → Obszary robocze*. Numery 1–5 są już przygotowane.
 
 ## Wymagania
