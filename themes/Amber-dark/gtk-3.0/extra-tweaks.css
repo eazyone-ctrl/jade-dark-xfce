@@ -1,0 +1,272 @@
+/* MX-EASE DARK GTK3 EXTRA TWEAKS */
+
+radiobutton:hover  {
+color: #b0a99f;
+background-color: #2d271e;
+}
+
+checkbutton:hover  {
+color: #b0a99f;
+background-color: #2d271e;
+}
+
+viewport {
+  background-color: #1e180f;
+  color: #b0a99f;
+}
+
+treeview {
+  background-color: #1e180f;
+  color: #b0a99f;
+}
+
+/* Toolbars */
+toolbar toolbutton button { border: solid 1px transparent; }
+
+toolbar toolbutton button:hover { color: #b0a99f; background-color: #2d271e; border: solid 1px #1e180f; }
+
+/* yad */
+
+#yad-form-button { border: solid 1px #887a64; }
+#yad-form-button:focus { color: #c5bdb2; background-color: #261f14; }
+#yad-form-button:focus:hover { color: #b0a99f; background-color: #2d271e; }
+#yad-form-button:focus:active { color: #c5bdb2; background-color: #51422b; border-color: #51422b; }
+
+/* Thunar */
+
+.thunar .sidebar .view:selected { color: #c5bdb2; background-color: #51422b; }
+
+.thunar .sidebar .view:hover { color: #b0a99f; background-color: #2d271e; }
+
+.thunar .standard-view .view { color: #b0a99f; background-color: #1e180f; }
+
+.thunar .standard-view .view:selected { color: #c5bdb2; background-color: #51422b; }
+
+.thunar .standard-view .view:hover { color: #b0a99f; background-color: #2d271e; }
+
+.thunar .standard-view .view:selected:hover { color: #c5bdb2; background-color: #51422b; }
+
+.thunar .view .rubberband { background-color: alpha(#51422b, 0.35); }
+
+.thunar menubar > menuitem:hover { color: #c5bdb2; background-color: #51422b; }
+
+.thunar menuitem:hover { color: #b0a99f; background-color: #2d271e; }
+
+.thunar toolbar toolitem button box {
+    color: #c5bdb2;
+    background-color: transparent;
+}
+
+.thunar toolbar toolitem button box:active {
+    color: #c5bdb2;
+    background-color: #51422b;
+}
+
+
+.thunar toolbar toolbutton button {
+    border: solid 1px transparent;
+}
+
+.thunar toolbar toolbutton button:hover {
+    background-color: #2d271e;
+    color: #b0a99f;
+    border: solid 1px #2d271e;
+}
+
+.thunar toolbar toolbutton button:active {
+    color: #c5bdb2;
+    background-color: #51422b;
+    border: solid 1px #51422b;
+}
+
+.thunar toolbar toolbutton button:checked {
+    color: #c5bdb2;
+    background-color: #51422b;
+    border: solid 1px #51422b;
+}
+
+.thunar radio:not(list):checked {-gtk-icon-source: -gtk-scaled(url("assets/radio-checked.png")) }
+.thunar radio:not(list) {-gtk-icon-source: -gtk-scaled(url("assets/radio-unchecked.png")) }
+
+.thunar check:not(list):checked {-gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-checked.png")) }
+.thunar check:not(list) {-gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-unchecked.png")) }
+
+
+/* Geany */
+
+dialog > box > widget {
+color: #c5bdb2 ;
+background-color: #261f14 ;
+}
+
+dialog > box > widget > box {
+color: #c5bdb2 ;
+background-color: #261f14 ;
+}
+
+notebook header tab button { border: solid 1px transparent; }
+
+window box toolbar button { border: solid 1px transparent; }
+
+
+/* Inkscape */
+box widget flowbox button { border: solid 1px transparent; }
+
+scrolledwindow button { border: 1px solid transparent; }
+
+.standard-view .view:selected { color: #c5bdb2; background-color: #51422b; }
+
+box grid toolbar button { border: solid 1px transparent; }
+scrolledwindow viewport grid button { border: solid 1px transparent; }
+
+.horizontal .inkscape-toolbar .flat { border: solid 1px transparent; }
+.horizontal .inkscape-toolbar .combo { border: solid 1px transparent; }
+.horizontal .inkscape-toolbar .toggle { background-color: transparent; border: solid 1px transparent; }
+
+/*Claws Mail*/
+
+#mainwindow #summaryview_sctree:selected {color: #c5bdb2; background-color: #51422b; }
+
+#mainwindow #folderview_sctree:selected {color: #c5bdb2
+; background-color: #51422b; }
+
+
+/*Galculator*/
+
+box box box grid button.toggle {
+  color: #c5bdb2;
+  background-color: #261f14;
+  border: solid 1px #887a64;
+}
+
+box box box grid button.toggle:hover {
+  color: #b0a99f;
+  background-color: #2d271e;
+  border: solid 1px #2d271e;
+}
+
+box box box grid button.toggle:active {
+  color: #c5bdb2;
+  background-color: #51422b;
+  border: solid 1px #51422b;
+}
+
+box box box grid button.toggle:disabled {
+  color: #887a64;
+  background-color: #1e180f;
+  border: solid 1px #887a64;
+}
+
+
+/*seahorse*/
+
+viewport clamp list { background-color: #261f14; }
+
+viewport clamp list row { background-color: #323232; color: #d6ccbe; box-shadow: none; }
+viewport clamp list row label { background-color: #323232; color: #d6ccbe; }
+viewport clamp list row:hover { background-color: #2d271e; color: #b0a99f; }
+viewport clamp list row:hover label { background-color: #2d271e; color: #b0a99f; }
+viewport clamp list row:selected { background-color: #51422b; color: #c5bdb2; }
+viewport clamp list row:selected label { background-color: #51422b; color: #c5bdb2; }
+viewport clamp list row:active { border: solid 1px #51422b; background-color: #2d271e; color: #b0a99f; }
+
+viewport list row:selected { background-color: #51422b; color: #c5bdb2; }
+viewport list row:selected label { background-color: #51422b; color: #c5bdb2; }
+viewport list row:hover { background-color: #2d271e; color: #b0a99f; }
+viewport list row:selected:hover { background-color: #51422b; color: #c5bdb2; }
+
+/*libreoffice*/
+
+scrolledwindow .view:hover   { color: #b0a99f; background-color: #2d271e; }
+
+/*bleachbit*/
+
+.appmenu.popup.titlebutton.toggle { border: none; }
+.popup.toggle { border: none; }
+.titlebutton.vertical { background-color: transparent; }
+.image-button { border: none; }
+
+/*gimp*/
+
+.gimp-welcome-dialog .flat.link.text-button { background-color: transparent; border: none; }
+
+/*geany*/
+#GeanyToolbar toolbutton .flat.image-button { border: solid 1px transparent; border-radius: 0; }
+#GeanyToolbar toolbutton .flat.image-button:hover { border: solid 1px #2d271e; border-radius: 0; }
+#GeanyToolbar toolbutton .flat.image-button:active { border: solid 1px #51422b; border-radius: 0; }
+
+/* Thunar w kolorach MX Narzędzi: ciemne tło główne, jaśniejszy panel boczny, subtelne ramki */
+.thunar, .thunar menubar, .thunar toolbar, .thunar statusbar { background-color: #1e180f; }
+.thunar .sidebar, .thunar .sidebar .view { color: #b0a99f; background-color: #261f14; }
+.thunar .sidebar .view:selected { color: #c5bdb2; background-color: #51422b; }
+.thunar paned > separator { background-color: #2d271e; }
+.thunar statusbar { color: #ada291; border-top: 1px solid #2d271e; }
+.thunar toolbar { border-bottom: 1px solid #2d271e; }
+.thunar notebook > header { background-color: #1e180f; border-color: #2d271e; }
+.thunar notebook > header > tabs > tab { color: #ada291; background-color: transparent; }
+.thunar notebook > header > tabs > tab:checked { color: #b0a99f; background-color: #261f14; }
+
+/* >>> jade-horse: logout >>> */
+/* okno konczenia sesji: sam tekst, male przyciski */
+.xfsm-logout-dialog button { min-height: 0; min-width: 0; padding: 6px 14px; border-radius: 8px; }
+.xfsm-logout-dialog button image { opacity: 0; min-height: 0; min-width: 0; margin-bottom: -48px; }
+/* odstep 6 px po ukrytej ikonie, inaczej tekst jest przesuniety w dol */
+.xfsm-logout-dialog button > box > image + label { margin-top: -6px; }
+/* <<< jade-horse: logout <<< */
+
+/* >>> jade-horse: notify >>> */
+/* powiadomienia i okienko glosnosci: zwarte, z wyraznym paskiem */
+#XfceNotifyWindow {
+  background-color: #1e180f;
+  border: 2px solid #b07b2c;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+#XfceNotifyWindow image { -gtk-icon-transform: scale(0.67); -gtk-icon-style: symbolic; color: #b0a99f; }
+#XfceNotifyWindow progressbar trough { min-height: 8px; min-width: 140px; background-color: #2d271e; border: none; border-radius: 9999px; }
+#XfceNotifyWindow progressbar progress { min-height: 8px; background-color: #b07b2c; border: none; border-radius: 9999px; }
+/* <<< jade-horse: notify <<< */
+
+/* >>> jade-horse: kolory >>> */
+/* przyciski wyboru koloru: wysokosc jak menu rozwijane; GTK narzuca polu koloru szerokosc 35 px */
+button.color {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #51422b;
+  border-radius: 5px;
+}
+button.color:hover { border-color: #b07b2c; }
+button.color colorswatch, button.color colorswatch overlay { min-height: 24px; border-radius: 4px; }
+/* <<< jade-horse: kolory <<< */
+
+/* >>> jade-horse: pola rozwijane >>> */
+/* jedna wysokosc 26 px: pola rozwijane, tekstowe, liczbowe i przyciski */
+button {
+  min-height: 18px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+entry, spinbutton:not(.vertical), spinbutton:not(.vertical) entry, combobox entry {
+  min-height: 24px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+spinbutton:not(.vertical) button, spinbutton:not(.vertical) > button {
+  min-height: 16px;
+  min-width: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-width: 4px;
+}
+combobox > box.linked > entry.combo + button.combo {
+  min-height: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-width: 4px;
+  border-bottom-width: 4px;
+}
+/* <<< jade-horse: pola rozwijane <<< */

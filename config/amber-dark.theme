@@ -1,0 +1,11 @@
+[Scheme]
+Name=Amber-dark
+ColorForeground=#c5bdb2
+ColorBackground=#15110a
+ColorCursor=#b07b2c
+ColorSelection=#c5bdb2
+ColorSelectionBackground=#51422b
+ColorBold=#ede7df
+ColorBoldUseDefault=FALSE
+TabActivityColor=#b07b2c
+ColorPalette=#261f14;#d9737d;#b07b2c;#c9b458;#6aa5d8;#b58ad6;#3fb5ae;#c5bdb2;#948e86;#e08f96;#d3a55f;#e0cf7d;#8dbde6;#cfa9e6;#6fd3cd;#ede7df

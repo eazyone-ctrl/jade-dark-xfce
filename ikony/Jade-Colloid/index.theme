@@ -1,0 +1,35 @@
+[Icon Theme]
+Name=Jade-Colloid
+Comment=Colloid Teal Everforest Dark z jednokolorowymi ikonami menu, Thunara i Ustawien
+Inherits=Colloid-Teal-Everforest-Dark,Yaru-sage-dark,Humanity,hicolor
+Example=folder
+Directories=24x24/actions,32x32/actions,48x48/apps,scalable/actions,scalable/apps
+
+[24x24/actions]
+Context=Actions
+Size=24
+Type=Fixed
+
+[32x32/actions]
+Context=Actions
+Size=32
+Type=Fixed
+
+[scalable/actions]
+Context=Actions
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[48x48/apps]
+Context=Applications
+Size=48
+Type=Fixed
+
+[scalable/apps]
+Context=Applications
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Jade-dark
+Comment=A Theme for MX-Linux
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Jade-dark
+MetacityTheme=Jade-dark-compact
+IconTheme=Papirus
+CursorTheme=DMZ-Black
+ButtonLayout=menu:minimize,maximize,close

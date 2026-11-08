@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Amber-dark
+Comment=A Theme for MX-Linux
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Amber-dark
+MetacityTheme=Amber-dark-compact
+IconTheme=Amber-Colloid
+CursorTheme=DMZ-Black
+ButtonLayout=menu:minimize,maximize,close

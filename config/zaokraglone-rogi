@@ -1,0 +1,26 @@
+#!/bin/sh
+# Użycie: zaokraglone-rogi on|off
+cd ~
+A=~/.config/autostart/picom.desktop
+kompozytor_xfwm() { xfconf-query -c xfwm4 -p /general/use_compositing -n -t bool -s "$1"; }
+case "$1" in
+  on)
+    command -v picom >/dev/null || { echo "Najpierw: sudo apt install picom"; exit 1; }
+    kompozytor_xfwm false
+    pkill -x picom; sleep 2
+    setsid picom --config ~/.config/picom/picom.conf >/dev/null 2>&1 &
+    sleep 2
+    if ! pgrep -x picom >/dev/null; then
+      kompozytor_xfwm true
+      echo "picom się nie uruchomił (motyw wymaga picom 12 lub nowszego). Przywrócono kompozytor xfwm4."
+      exit 1
+    fi
+    mkdir -p ~/.config/autostart
+    printf '[Desktop Entry]\nType=Application\nName=Picom\nExec=picom --config %s/.config/picom/picom.conf\nX-GNOME-Autostart-enabled=true\n' "$HOME" > "$A"
+    echo "Włączone (picom startuje też przy logowaniu)" ;;
+  off)
+    pkill -x picom; rm -f "$A"
+    kompozytor_xfwm true
+    echo "Wyłączone, przywrócono kompozytor xfwm4" ;;
+  *) echo "Użycie: zaokraglone-rogi on|off" ;;
+esac

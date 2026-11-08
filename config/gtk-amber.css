@@ -1,0 +1,72 @@
+/* >>> jade-horse: menu >>> */
+/* Whisker Menu: siatka ikon, kolory Jade Horse, JetBrains Mono 9 pt */
+#whiskermenu-window,
+#whiskermenu-window.background {
+  background-color: #1e180f;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 6px;
+}
+#whiskermenu-window, #whiskermenu-window * { font-family: "JetBrains Mono"; font-size: 9pt; }
+#whiskermenu-window entry {
+  background-color: #261f14;
+  color: #b0a99f;
+  border: none;
+  border-radius: 9999px;
+  min-height: 20px;
+  padding: 0 10px;
+}
+#whiskermenu-window entry.search { min-height: 20px; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; }
+#whiskermenu-window entry.search image { min-height: 0; min-width: 16px; -gtk-icon-transform: scale(0.8); }
+#whiskermenu-window entry:focus { box-shadow: inset 0 0 0 1px #cbb18b; }
+#whiskermenu-window scrolledwindow,
+#whiskermenu-window frame,
+#whiskermenu-window frame > border { background-color: transparent; border: none; box-shadow: none; }
+#whiskermenu-window > frame > border { border: 2px solid #b07b2c; border-radius: 10px; }
+#whiskermenu-window viewport,
+#whiskermenu-window .view,
+#whiskermenu-window iconview,
+#whiskermenu-window treeview { background-color: #1e180f; border: none; box-shadow: none; }
+#whiskermenu-window iconview { padding: 6px; }
+#whiskermenu-window treeview { -GtkTreeView-vertical-separator: 8px; }
+#whiskermenu-window .view:hover { background-color: #2d271e; border-radius: 6px; }
+#whiskermenu-window .view:selected { background-color: #51422b; color: #c5bdb2; border-radius: 6px; }
+#whiskermenu-window button {
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: none;
+  color: #b0a99f;
+  padding: 4px 10px;
+}
+#whiskermenu-window button:not(.category-button) { min-height: 0; min-width: 0; padding: 0 6px; }
+#whiskermenu-window button:hover { background-color: #2d271e; }
+#whiskermenu-window button:checked { background-color: #51422b; color: #c5bdb2; }
+#whiskermenu-window .categories { padding: 4px; }
+#whiskermenu-window .category-button { padding: 1px 10px; margin: 0; min-height: 0; border-radius: 6px; }
+/* <<< jade-horse: menu <<< */
+/* >>> jade-horse: panel >>> */
+.xfce4-panel { font-family: "JetBrains Mono"; font-size: 10pt; color: #b0a99f; }
+.xfce4-panel button { border-radius: 6px; padding-left: 6px; padding-right: 6px; }
+#docklike-@DOCK@ button { padding: 0 6px; margin: 0; min-width: 0; }
+#pager-@PAGER@ button, .xfce4-panel wnck-pager button { min-width: 22px; padding: 0 4px; border: none; background: transparent; color: #887a64; }
+#pager-@PAGER@ button:checked, .xfce4-panel wnck-pager button:checked { color: #b0a99f; background: #2d271e; }
+#systray-@SYSTRAY@ > *, #systray-@SYSTRAY@ box > * { margin-left: 4px; margin-right: 4px; }
+#pulseaudio-@PULSE@, #weather-@WEATHER@ { margin-left: 4px; margin-right: 4px; }
+/* <<< jade-horse: panel <<< */
+/* >>> jade-horse: thunar >>> */
+.thunar toolbar button { min-height: 24px; min-width: 24px; padding: 2px 6px; }
+/* <<< jade-horse: thunar <<< */
+/* >>> jade-horse: popup >>> */
+/* menu w programach bez własnego cienia i przezroczystego marginesu */
+.csd.popup decoration, window.popup decoration, menu decoration, .context-menu decoration {
+  box-shadow: none; margin: 0; border: none; border-radius: 0;
+}
+menu, .menu, .context-menu { margin: 0; border: 1px solid #2d271e; border-radius: 10px; }
+/* <<< jade-horse: popup <<< */
+
+/* >>> jade-horse: panel-motyw >>> */
+/* tlo panelu z motywu, zeby zmienialo sie razem z nim */
+.xfce4-panel.background { background-color: rgba(30, 24, 15, 0.7); background-image: none; border: none; }
+/* <<< jade-horse: panel-motyw <<< */

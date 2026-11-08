@@ -1,0 +1,427 @@
+#!/usr/bin/env python3
+"""Ustawia kolor klawiatury Keychron (QMK/VIA), myszy Corsair M75 i wentylatorow
+podlaczonych do kontrolera ASUS AURA wg motywu GTK w XFCE.
+
+  keyboard-theme-sync           dziala w tle i reaguje na zmiane motywu
+  keyboard-theme-sync --once    ustawia kolor raz i konczy
+  keyboard-theme-sync --list    pokazuje kolor wykryty dla kazdego motywu
+
+Kolor mozna nadpisac w ~/.config/keyboard-theme-sync.conf, np.:
+  Jade-dark = #00ffaa
+  mysz: Jade-dark = #00ff55    (tylko jedno urzadzenie: klawiatura, mysz, wentylatory)
+
+Zmiany trafiaja tylko do pamieci RAM urzadzen, wiec po ich odlaczeniu wracaja
+ustawienia zapisane w samej klawiaturze i myszy.
+"""
+import collections
+import colorsys
+import fcntl
+import functools
+import glob
+import os
+import re
+import select
+import signal
+import subprocess
+import sys
+import time
+
+# Mysz: protokol Corsair V2 (ten sam co w OpenRGB), 2 LED-y: logo i rolka.
+MOUSE_REPORT_SIZE = 65
+MOUSE_WRITE = 0x08
+MOUSE_SET, MOUSE_STOP_TX, MOUSE_WRITE_BLOCK, MOUSE_START_TX = 0x01, 0x05, 0x06, 0x0D
+MOUSE_VALUE_MODE, MOUSE_MODE_HARDWARE, MOUSE_MODE_SOFTWARE = 0x03, 0x01, 0x02
+MOUSE_HANDLE, MOUSE_LIGHTING = 0x01, 0x22
+MOUSE_LEDS = 2
+MOUSE_KEEPALIVE_SECONDS = 20
+
+# Wentylatory: kontroler ASUS AURA USB w trybie bezposrednim (bez zapisu w pamieci kontrolera).
+AURA_REPORT, AURA_REPORT_SIZE = 0xEC, 65
+AURA_EFFECT, AURA_DIRECT, AURA_MODE_DIRECT, AURA_APPLY = 0x35, 0x40, 0xFF, 0x80
+AURA_EFFECT_CHANNELS = (0, 1, 2)
+AURA_DIRECT_CHANNELS = ((0, 32), (1, 32), (4, 2))  # (kanal, liczba LED-ow): zlacza ARGB i plyta
+AURA_LEDS_PER_PACKET = 20
+
+VIA_SET, VIA_GET, VIA_RGB_CHANNEL = 0x07, 0x08, 0x03
+EFFECT_SETTLE_SECONDS = 0.2
+WRITE_ATTEMPTS = 5
+VALUE_EFFECT, VALUE_COLOR = 0x02, 0x04
+EFFECT_SOLID = 1
+
+MIN_SATURATION = 0.75  # kolory motywow sa stonowane; na LED-ach wygladalyby na biale
+GREY_BELOW = 0.12  # motyw bez wyraznego akcentu -> biale podswietlenie
+POLL_SECONDS = 5
+
+HOME = os.path.expanduser("~")
+THEME_DIRS = [f"{HOME}/.themes", f"{HOME}/.local/share/themes", "/usr/share/themes"]
+CONFIG = f"{HOME}/.config/keyboard-theme-sync.conf"
+ACCENT_NAMES = ("theme_selected_bg_color", "selected_bg_color", "accent_bg_color", "accent_color")
+COLOR = r"#[0-9a-fA-F]{3,12}\b|rgba?\([^)]*\)"
+
+
+def parse_color(text):
+    """Zwraca (r, g, b) w zakresie 0-1 albo None, gdy nie umie odczytac wartosci."""
+    text = text.strip()
+    if text.startswith("#"):
+        digits = text[1:]
+        if len(digits) not in (3, 6, 12):
+            return None
+        size = len(digits) // 3
+        scale = 16 ** size - 1
+        return tuple(int(digits[i * size:(i + 1) * size], 16) / scale for i in range(3))
+    match = re.match(r"rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)", text)
+    if match:
+        return tuple(float(v) / 255 for v in match.groups())
+    return None
+
+
+def read_css(path, seen=None):
+    """Czyta plik CSS razem z lokalnymi @import."""
+    seen = seen if seen is not None else set()
+    if path in seen or not os.path.isfile(path):
+        return ""
+    seen.add(path)
+    with open(path, errors="replace") as handle:
+        css = re.sub(r"/\*.*?\*/", "", handle.read(), flags=re.S)
+    for name in re.findall(r"""@import\s+(?:url\()?["']([^"']+)["']""", css):
+        if "://" in name:  # resource:///.../gtk-3.20/dist/gtk.css -> lokalny dist/gtk.css
+            match = re.search(r"/gtk-[\d.]+/(.+)$", name)
+            if not match:
+                continue
+            name = match.group(1)
+        css += read_css(os.path.join(os.path.dirname(path), name), seen)
+    return css
+
+
+def accent_from_css(css):
+    defined = dict(re.findall(r"@define-color\s+([\w-]+)\s+([^;]+);", css))
+    for name in ACCENT_NAMES:
+        value = defined.get(name, "")
+        for _ in range(5):  # aliasy typu @define-color a @b;
+            if not value.startswith("@"):
+                break
+            value = defined.get(value[1:].strip(), "")
+        color = parse_color(value)
+        if color:
+            return color
+    # Motywy bez nazwanych kolorow: pierwsze tlo zaznaczonego elementu.
+    rule = re.search(rf":selected[^{{}}]*\{{[^}}]*?background-color:\s*({COLOR})", css)
+    return parse_color(rule.group(1)) if rule else None
+
+
+def theme_accent(theme):
+    for base in THEME_DIRS:
+        path = os.path.join(base, theme)
+        color = accent_from_css(read_css(f"{path}/gtk-3.0/gtk.css"))
+        if color:
+            return color
+        gtkrc = f"{path}/gtk-2.0/gtkrc"
+        if os.path.isfile(gtkrc):
+            with open(gtkrc, errors="replace") as handle:
+                for line in handle:
+                    match = re.search(r"selected_bg_color:(#[0-9a-fA-F]+)", line)
+                    if match and not line.lstrip().startswith("#"):
+                        color = parse_color(match.group(1))
+                        if color:
+                            return color
+    return None
+
+
+@functools.lru_cache(maxsize=None)
+def theme_is_dark(theme):
+    """Sprawdza jasnosc tla motywu; None, gdy motyw nie podaje koloru tla."""
+    for base in THEME_DIRS:
+        css = read_css(os.path.join(base, theme, "gtk-3.0", "gtk.css"))
+        match = re.search(r"@define-color\s+theme_bg_color\s+([^;]+);", css)
+        color = parse_color(match.group(1)) if match else None
+        if color:
+            red, green, blue = color
+            return 0.299 * red + 0.587 * green + 0.114 * blue < 0.5
+    return None
+
+
+def sync_color_scheme():
+    """Xfce rozpoznaje ciemny motyw tylko po nazwie, wiec dla motywow bez "dark" w nazwie kasuje ciemny tryb."""
+    dark = theme_is_dark(current_theme())
+    if dark is None:
+        return
+    key = ("org.gnome.desktop.interface", "color-scheme")
+    current = subprocess.run(
+        ["gsettings", "get", *key], capture_output=True, text=True, check=True,
+    ).stdout.strip().strip("'")
+    if current == "prefer-dark" if dark else current != "prefer-dark":
+        return
+    wanted = "prefer-dark" if dark else "default"
+    subprocess.run(["gsettings", "set", *key, wanted], check=True)
+    print(f"color-scheme: {current} -> {wanted}", flush=True)
+
+
+def overrides():
+    result = {}
+    if os.path.isfile(CONFIG):
+        with open(CONFIG) as handle:
+            for line in handle:
+                if "=" in line and not line.lstrip().startswith("#"):
+                    name, value = line.split("=", 1)
+                    result[name.strip()] = value.strip()
+    return result
+
+
+def color_for(theme, device=None):
+    configured = overrides()
+    override = configured.get(f"{device}: {theme}") or configured.get(theme)
+    return parse_color(override) if override else theme_accent(theme)
+
+
+def to_hue_sat(color):
+    """Zamienia kolor na hue/sat QMK (0-255); jasnosc zostaje taka, jaka ustawiono na klawiaturze."""
+    if color is None:
+        return 0, 0
+    hue, saturation, _ = colorsys.rgb_to_hsv(*color)
+    if saturation < GREY_BELOW:
+        return 0, 0
+    return round(hue * 255), round(max(saturation, MIN_SATURATION) * 255)
+
+
+def find_device(output):
+    for sys_path in sorted(glob.glob("/sys/class/hidraw/hidraw*")):
+        try:
+            with open(f"{sys_path}/device/uevent") as handle:
+                uevent = handle.read().upper()
+            with open(f"{sys_path}/device/report_descriptor", "rb") as handle:
+                descriptor = handle.read()
+        except OSError:
+            continue
+        if output.hid_id in uevent and descriptor.startswith(output.descriptor):
+            return f"/dev/{os.path.basename(sys_path)}"
+    return None
+
+
+def device_signature(output):
+    """Zmienia sie po ponownym podlaczeniu urzadzenia."""
+    path = find_device(output)
+    if not path:
+        return None
+    info = os.stat(path)
+    return path, info.st_rdev, info.st_ctime_ns
+
+
+def via_command(handle, command, *payload):
+    message = bytes([command, VIA_RGB_CHANNEL, *payload])
+    os.write(handle, b"\0" + message + bytes(32 - len(message)))
+    ready, _, _ = select.select([handle], [], [], 1)
+    if not ready:
+        raise OSError("klawiatura nie odpowiedziala")
+    reply = os.read(handle, 32)
+    if reply[0] == 0xFF:
+        raise OSError("klawiatura odrzucila polecenie VIA")
+    return reply
+
+
+def apply_keyboard(path, hue, saturation):
+    handle = os.open(path, os.O_RDWR)
+    try:
+        via_command(handle, VIA_SET, VALUE_EFFECT, EFFECT_SOLID)
+        # Kolor wyslany tuz po zmianie efektu klawiatura potwierdza, ale gubi,
+        # dlatego jest pauza i odczyt kontrolny.
+        for _ in range(WRITE_ATTEMPTS):
+            time.sleep(EFFECT_SETTLE_SECONDS)
+            via_command(handle, VIA_SET, VALUE_COLOR, hue, saturation)
+            reply = via_command(handle, VIA_GET, VALUE_COLOR)
+            if tuple(reply[3:5]) == (hue, saturation):
+                return
+        raise OSError("klawiatura nie przyjela koloru")
+    finally:
+        os.close(handle)
+
+
+def mouse_command(handle, *payload, check=True):
+    message = bytes([0, MOUSE_WRITE, *payload])
+    os.write(handle, message + bytes(MOUSE_REPORT_SIZE - len(message)))
+    ready, _, _ = select.select([handle], [], [], 1)
+    if not ready:
+        raise OSError("mysz nie odpowiedziala")
+    reply = os.read(handle, 128)
+    if check and reply[2] != 0:
+        raise OSError(f"mysz zwrocila blad {reply[2]} na polecenie {payload[0]:#x}")
+
+
+def apply_mouse(path, hue, saturation):
+    red, green, blue = colorsys.hsv_to_rgb(hue / 255, saturation / 255, 1)
+    # Ustalone testami na tej myszy: 2 bajty zer, potem R, G, B kolejno dla kazdego LED-a.
+    colors = bytes(2) + bytes(round(value * 255) for value in (red, green, blue)) * MOUSE_LEDS
+    handle = os.open(path, os.O_RDWR)
+    try:
+        mouse_command(handle, MOUSE_SET, MOUSE_VALUE_MODE, 0, MOUSE_MODE_SOFTWARE)
+        # Uchwyt moze zostac otwarty po wczesniejszym przerwanym zapisie.
+        mouse_command(handle, MOUSE_STOP_TX, 1, MOUSE_HANDLE, check=False)
+        mouse_command(handle, MOUSE_START_TX, MOUSE_HANDLE, MOUSE_LIGHTING)
+        # Uchwyt zostaje otwarty, tak jak w OpenRGB; zamyka go restore_mouse().
+        mouse_command(handle, MOUSE_WRITE_BLOCK, MOUSE_HANDLE, len(colors), 0, 0, 0, *colors)
+    finally:
+        os.close(handle)
+
+
+def restore_mouse():
+    """Oddaje myszy sterowanie podswietleniem (jej wlasny, zapisany efekt)."""
+    path = find_device(MOUSE)
+    if not path:
+        return
+    handle = os.open(path, os.O_RDWR)
+    try:
+        mouse_command(handle, MOUSE_STOP_TX, 1, MOUSE_HANDLE, check=False)
+        mouse_command(handle, MOUSE_SET, MOUSE_VALUE_MODE, 0, MOUSE_MODE_HARDWARE)
+    finally:
+        os.close(handle)
+
+
+def apply_fans(path, hue, saturation):
+    color = bytes(round(value * 255) for value in colorsys.hsv_to_rgb(hue / 255, saturation / 255, 1))
+
+    def send(*payload):
+        message = bytes([AURA_REPORT, *payload])
+        os.write(handle, message + bytes(AURA_REPORT_SIZE - len(message)))
+
+    handle = os.open(path, os.O_RDWR)
+    try:
+        send(0x52, 0x53, 0, 1)  # inicjalizacja jak w OpenRGB
+        for channel in AURA_EFFECT_CHANNELS:
+            send(AURA_EFFECT, channel, 0, 0, AURA_MODE_DIRECT)
+        time.sleep(0.1)
+        for channel, count in AURA_DIRECT_CHANNELS:
+            for offset in range(0, count, AURA_LEDS_PER_PACKET):
+                leds = min(AURA_LEDS_PER_PACKET, count - offset)
+                last = offset + leds == count
+                send(AURA_DIRECT, channel | (AURA_APPLY if last else 0), offset, leds, *(color * leds))
+    finally:
+        os.close(handle)
+
+
+Output = collections.namedtuple("Output", "name hid_id descriptor apply keepalive")
+KEYBOARD = Output("klawiatura", ":00003434:", bytes.fromhex("0660ff0961"), apply_keyboard, None)
+MOUSE = Output("mysz", ":00001B1C:00001BF0", bytes.fromhex("0642ff0901"), apply_mouse, MOUSE_KEEPALIVE_SECONDS)
+FANS = Output("wentylatory", ":00000B05:000019AF", bytes.fromhex("0672ff09a1"), apply_fans, None)
+OUTPUTS = (KEYBOARD, MOUSE, FANS)
+
+
+def current_theme():
+    return subprocess.run(
+        ["xfconf-query", "-c", "xsettings", "-p", "/Net/ThemeName"],
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+
+
+def sync_output(output, quiet=False):
+    path = find_device(output)
+    if not path:
+        raise OSError(f"{output.name}: nie znaleziono urzadzenia")
+    theme = current_theme()
+    hue, saturation = to_hue_sat(color_for(theme, output.name))
+    output.apply(path, hue, saturation)
+    if not quiet:
+        print(f"{output.name}: {theme}: hue={hue} sat={saturation}", flush=True)
+
+
+def sync_once():
+    failed = False
+    try:
+        sync_color_scheme()
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"color-scheme: blad: {error}", file=sys.stderr, flush=True)
+        failed = True
+    for output in OUTPUTS:
+        try:
+            sync_output(output)
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f"{output.name}: blad: {error}", file=sys.stderr, flush=True)
+            failed = True
+    if failed:
+        sys.exit(1)
+
+
+def monitor():
+    return subprocess.Popen(
+        ["xfconf-query", "-c", "xsettings", "-p", "/Net/ThemeName", "-m"],
+        stdout=subprocess.PIPE,
+    )
+
+
+def run_daemon():
+    runtime_dir = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+    lock = open(f"{runtime_dir}/keyboard-theme-sync.lock", "w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        sys.exit("keyboard-theme-sync juz dziala")
+
+    def stop(*_):
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, stop)
+    signal.signal(signal.SIGHUP, stop)
+
+    watcher = monitor()
+    applied_to = {}
+    applied_at = {}
+    errors = {}
+    pending = set(OUTPUTS)
+    try:
+        while True:
+            ready, _, _ = select.select([watcher.stdout], [], [], POLL_SECONDS)
+            if ready:
+                if not os.read(watcher.stdout.fileno(), 4096):  # np. restart xfconfd
+                    watcher.wait()
+                    watcher = monitor()
+                pending = set(OUTPUTS)
+            try:
+                sync_color_scheme()
+            except (OSError, subprocess.CalledProcessError) as error:
+                print(f"color-scheme: blad: {error}", file=sys.stderr, flush=True)
+            for output in OUTPUTS:
+                signature = device_signature(output)
+                if not signature:
+                    continue
+                changed = output in pending or signature != applied_to.get(output)
+                stale = output.keepalive and time.monotonic() - applied_at.get(output, 0) >= output.keepalive
+                if not changed and not stale:
+                    continue
+                try:
+                    sync_output(output, quiet=not changed)
+                    applied_to[output] = signature
+                    applied_at[output] = time.monotonic()
+                    pending.discard(output)
+                    errors.pop(output, None)
+                except (OSError, subprocess.CalledProcessError) as error:
+                    if errors.get(output) != str(error):  # kazdy blad zglaszany tylko raz
+                        errors[output] = str(error)
+                        print(f"{output.name}: blad: {error}", file=sys.stderr, flush=True)
+    finally:
+        watcher.terminate()
+        try:
+            restore_mouse()
+        except OSError as error:
+            print(f"mysz: blad: {error}", file=sys.stderr, flush=True)
+
+
+def list_themes():
+    names = set()
+    for base in THEME_DIRS:
+        if os.path.isdir(base):
+            names.update(n for n in os.listdir(base) if os.path.isdir(os.path.join(base, n, "gtk-3.0")))
+    for name in sorted(names, key=str.lower):
+        color = color_for(name)
+        shown = "#%02x%02x%02x" % tuple(round(c * 255) for c in color) if color else "brak -> bialy"
+        hue, saturation = to_hue_sat(color)
+        print(f"{name:40} {shown:15} hue={hue:<3} sat={saturation}")
+
+
+if __name__ == "__main__":
+    argument = sys.argv[1] if len(sys.argv) > 1 else ""
+    if argument == "--once":
+        sync_once()
+    elif argument == "--list":
+        list_themes()
+    elif not argument:
+        run_daemon()
+    else:
+        sys.exit(__doc__)

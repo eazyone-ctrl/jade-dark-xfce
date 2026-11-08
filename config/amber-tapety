@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""Tworzy bursztynowe wersje tapet: amber-tapety PLIK... (zapis obok, z dopiskiem -amber)."""
+import sys,os
+import numpy as np
+from PIL import Image
+AMBER=36/360; LO,HI=80/360,195/360; F=12/360
+for p in sys.argv[1:]:
+    a=np.asarray(Image.open(p).convert('RGB'),dtype=np.float32)/255; r,g,b=a[...,0],a[...,1],a[...,2]
+    mx=a.max(-1); mn=a.min(-1); d=mx-mn; h=np.zeros_like(mx); m=d>1e-5
+    i=m&(mx==r); h[i]=((g-b)[i]/d[i])%6
+    i=m&(mx==g)&(mx!=r); h[i]=(b-r)[i]/d[i]+2
+    i=m&(mx==b)&(mx!=r)&(mx!=g); h[i]=(r-g)[i]/d[i]+4
+    h/=6; s=np.where(mx>0,d/np.maximum(mx,1e-5),0); v=mx
+    w=np.clip((h-(LO-F))/F,0,1)*np.clip(((HI+F)-h)/F,0,1)
+    nh=h+(AMBER-h)*w; x=(nh*6)%6; c=v*s; q=c*(1-np.abs(x%2-1)); o=v-c; k=x.astype(int)%6
+    R=np.choose(k,[c,q,0*c,0*c,q,c]); G=np.choose(k,[q,c,c,q,0*c,0*c]); B=np.choose(k,[0*c,0*c,q,c,c,q])
+    out=np.clip(np.stack([R+o,G+o,B+o],-1)*255+.5,0,255).astype(np.uint8)
+    st,e=os.path.splitext(p); t=f'{st}-amber{e}'; Image.fromarray(out).save(t,quality=93,subsampling=0); print(os.path.basename(t),os.path.getsize(t)//1024,'kB')

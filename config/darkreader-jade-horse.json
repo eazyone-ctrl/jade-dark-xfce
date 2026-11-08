@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "theme": {
+    "mode": 1,
+    "brightness": 100,
+    "contrast": 100,
+    "grayscale": 0,
+    "sepia": 0,
+    "useFont": false,
+    "fontFamily": "JetBrains Mono",
+    "textStroke": 0,
+    "engine": "dynamicTheme",
+    "stylesheet": "",
+    "darkSchemeBackgroundColor": "#0f1e19",
+    "darkSchemeTextColor": "#dfede5",
+    "lightSchemeBackgroundColor": "#dfede5",
+    "lightSchemeTextColor": "#0f1e19",
+    "scrollbarColor": "#1e2d27",
+    "selectionColor": "#2b5147",
+    "styleSystemControls": true,
+    "darkColorScheme": "Default",
+    "lightColorScheme": "Default",
+    "immediateModify": false
+  }
+}

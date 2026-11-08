@@ -1,0 +1,11 @@
+[Scheme]
+Name=Jade-dark
+ColorForeground=#b2c5bb
+ColorBackground=#0a1511
+ColorCursor=#2cb083
+ColorSelection=#b2c5bb
+ColorSelectionBackground=#2b5147
+ColorBold=#dfede5
+ColorBoldUseDefault=FALSE
+TabActivityColor=#2cb083
+ColorPalette=#142620;#d9737d;#2cb083;#c9b458;#6aa5d8;#b58ad6;#3fb5ae;#b2c5bb;#86948c;#e08f96;#5fd3a6;#e0cf7d;#8dbde6;#cfa9e6;#6fd3cd;#dfede5
