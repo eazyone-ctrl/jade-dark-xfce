@@ -52,8 +52,9 @@ MIN_SATURATION = 0.75  # kolory motywow sa stonowane; na LED-ach wygladalyby na 
 GREY_BELOW = 0.12  # motyw bez wyraznego akcentu -> biale podswietlenie
 POLL_SECONDS = 5
 # Po wybudzeniu kontroler wentylatorow przyjmuje kolor, ale gubi go, dopoki sie nie
-# rozgrzeje, wiec kolory sa wysylane jeszcze kilka razy (sekundy po wybudzeniu).
-RESUME_RESYNC_SECONDS = (5, 15, 30)
+# rozgrzeje, wiec dostaje go jeszcze raz chwile pozniej. Kazde wyslanie to krotkie
+# migniecie diod, dlatego tylko raz i tylko wentylatory (klawiatura i mysz lapia kolor same).
+RESUME_RESYNC_SECONDS = 5
 
 HOME = os.path.expanduser("~")
 THEME_DIRS = [f"{HOME}/.themes", f"{HOME}/.local/share/themes", "/usr/share/themes"]
@@ -375,7 +376,7 @@ def run_daemon():
     pending = set(OUTPUTS)
     refresh = set()
     asleep = seconds_asleep()
-    resyncs = []
+    resync_at = None
     try:
         while True:
             ready, _, _ = select.select([watcher.stdout], [], [], POLL_SECONDS)
@@ -386,12 +387,12 @@ def run_daemon():
                 pending = set(OUTPUTS)
             now_asleep = seconds_asleep()
             if now_asleep - asleep > 1:
-                print("wybudzenie: kolory zostana wyslane ponownie", flush=True)
-                resyncs = [time.monotonic() + delay for delay in RESUME_RESYNC_SECONDS]
+                print("wybudzenie: kolor wentylatorow zostanie wyslany ponownie", flush=True)
+                resync_at = time.monotonic() + RESUME_RESYNC_SECONDS
             asleep = now_asleep
-            if resyncs and time.monotonic() >= resyncs[0]:
-                resyncs.pop(0)
-                refresh = set(OUTPUTS)
+            if resync_at and time.monotonic() >= resync_at:
+                resync_at = None
+                refresh = {FANS}
             try:
                 sync_color_scheme()
             except (OSError, subprocess.CalledProcessError) as error:
