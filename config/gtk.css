@@ -53,6 +53,8 @@
 #pager-@PAGER@ button, .xfce4-panel wnck-pager button { min-width: 22px; padding: 0 4px; border: none; background: transparent; color: #64887b; }
 #pager-@PAGER@ button:checked, .xfce4-panel wnck-pager button:checked { color: #9fb0a7; background: #1e2d27; }
 #systray-@SYSTRAY@ > *, #systray-@SYSTRAY@ box > * { margin-left: 4px; margin-right: 4px; }
+/* odstep miedzy ikonami zasobnika (przyciski; stare ikony zasobnika ignoruja marginesy ze stylu) */
+#systray-@SYSTRAY@ button { margin: 0 4px; padding: 0; }
 #pulseaudio-@PULSE@, #weather-@WEATHER@ { margin-left: 4px; margin-right: 4px; }
 /* wyraźny odstęp między zegarem a pogodą */
 #weather-@WEATHER@ > button { margin-left: 14px; }
