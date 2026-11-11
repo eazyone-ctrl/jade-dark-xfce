@@ -47,7 +47,7 @@ if [ -f "$K/gtk.css" ]; then cp "$K/gtk.css" ~/.config/gtk-3.0/gtk.css; else rm 
 [ -d "$K/panel" ] && cp -r "$K/panel/." ~/.config/xfce4/panel/
 [ -f "$K/picom.conf" ] && cp "$K/picom.conf" ~/.config/picom/picom.conf
 rm -f ~/.config/autostart/picom.desktop
-rm -f ~/.local/share/desktop-directories/xfce-education.directory ~/.local/share/applications/alsamixer.desktop
+rm -f ~/.local/share/desktop-directories/xfce-education.directory ~/.local/share/desktop-directories/xfce-other.directory ~/.local/share/applications/alsamixer.desktop
 gsettings set org.gnome.desktop.interface color-scheme $CS 2>/dev/null
 setsid xfce4-panel >/dev/null 2>&1 &
 xfwm4 --replace >/dev/null 2>&1 &
@@ -82,7 +82,7 @@ mkdir -p ~/.config/xfce4/weather/icons
 rm -rf ~/.config/xfce4/weather/icons/jade-outline; cp -a ikony/pogoda/jade-outline ~/.config/xfce4/weather/icons/
 cp ikony/pogoda/generuj-jade-outline.py ~/.config/xfce4/weather/icons/
 mkdir -p ~/.local/share/desktop-directories ~/.local/share/applications
-cp config/xfce-education.directory ~/.local/share/desktop-directories/
+cp config/xfce-education.directory config/xfce-other.directory ~/.local/share/desktop-directories/
 # Alsamixer ma inną ikonę niż Sterowanie głośnością
 [ -f /usr/share/applications/alsamixer.desktop ] && sed "s/^Icon=.*/Icon=jade-alsamixer/" /usr/share/applications/alsamixer.desktop > ~/.local/share/applications/alsamixer.desktop
 

@@ -1,1 +1,9 @@
-<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="30" height="30" rx="8" ry="8" fill="#f2f2f2"/><path d="M15.9 13.2c-1.662 0-3 1.338-3 3s1.338 3 3 3 3-1.338 3-3-1.338-3-3-3zm-7.5 0c-1.662 0-3 1.338-3 3s1.338 3 3 3 3-1.338 3-3-1.338-3-3-3zm15 0c-1.662 0-3 1.338-3 3s1.338 3 3 3 3-1.338 3-3-1.338-3-3-3z" fill="#333333"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32"><svg x="7" y="7" width="18" height="18" viewBox="0 0 16 16" fill="#ede7df">
+ <!-- Wszystkie programy: siatka czterech kafelkow -->
+ <g fill="none" stroke="#ede7df" stroke-width="1">
+  <rect x="1.5" y="1.5" width="5" height="5" rx="1.5"/>
+  <rect x="9.5" y="1.5" width="5" height="5" rx="1.5"/>
+  <rect x="1.5" y="9.5" width="5" height="5" rx="1.5"/>
+  <rect x="9.5" y="9.5" width="5" height="5" rx="1.5"/>
+ </g>
+</svg></svg>
