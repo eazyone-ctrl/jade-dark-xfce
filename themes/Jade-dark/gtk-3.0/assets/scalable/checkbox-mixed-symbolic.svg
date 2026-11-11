@@ -1,15 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   version="1.1"
-   id="svg4"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs8" />
-  <path
-     d="M 44,4 H 4 V 44 H 44 Z M 14,22 h 20 v 4 H 14 Z"
-     style="stroke-width:2"
-     id="path2" />
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+ <!-- czesciowo zaznaczone pole wyboru z delikatnie zaokraglonymi rogami -->
+ <path fill-rule="evenodd" d="M10 4H38A6 6 0 0 1 44 10V38A6 6 0 0 1 38 44H10A6 6 0 0 1 4 38V10A6 6 0 0 1 10 4Z M14 22H34V26H14Z"/>
 </svg>
