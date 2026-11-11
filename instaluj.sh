@@ -30,6 +30,7 @@ for c in xsettings xfwm4 xfce4-panel xfce4-terminal xfce4-desktop thunar; do
   [ -f "$X/$c.xml" ] && cp "$X/$c.xml" "$K/"
 done
 [ -f ~/.config/gtk-3.0/gtk.css ] && cp ~/.config/gtk-3.0/gtk.css "$K/"
+[ -f ~/.config/Thunar/uca.xml ] && cp ~/.config/Thunar/uca.xml "$K/"
 cp -r ~/.config/xfce4/panel "$K/panel" 2>/dev/null || true
 [ -f ~/.config/picom/picom.conf ] && cp ~/.config/picom/picom.conf "$K/"
 CS=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null || echo "'default'")
@@ -44,6 +45,7 @@ for c in xsettings xfwm4 xfce4-panel xfce4-terminal xfce4-desktop thunar; do
   if [ -f "$K/\$c.xml" ]; then cp "$K/\$c.xml" "$X/"; else rm -f "$X/\$c.xml"; fi
 done
 if [ -f "$K/gtk.css" ]; then cp "$K/gtk.css" ~/.config/gtk-3.0/gtk.css; else rm -f ~/.config/gtk-3.0/gtk.css; fi
+[ -f "$K/uca.xml" ] && cp "$K/uca.xml" ~/.config/Thunar/uca.xml
 [ -d "$K/panel" ] && cp -r "$K/panel/." ~/.config/xfce4/panel/
 [ -f "$K/picom.conf" ] && cp "$K/picom.conf" ~/.config/picom/picom.conf
 rm -f ~/.config/autostart/picom.desktop
@@ -85,6 +87,8 @@ mkdir -p ~/.local/share/desktop-directories ~/.local/share/applications
 cp config/xfce-education.directory config/xfce-other.directory ~/.local/share/desktop-directories/
 # Alsamixer ma inną ikonę niż Sterowanie głośnością
 [ -f /usr/share/applications/alsamixer.desktop ] && sed "s/^Icon=.*/Icon=jade-alsamixer/" /usr/share/applications/alsamixer.desktop > ~/.local/share/applications/alsamixer.desktop
+# Akcje Thunara (terminal, root, szukanie, dowiązanie) dostają konturowe ikony pasujące do paska narzędzi
+[ -f ~/.config/Thunar/uca.xml ] && python3 -I config/uca-ikony.py ~/.config/Thunar/uca.xml
 
 T=~/Obrazy/Tapety/cyberpunk
 [ -d ~/Obrazy ] || T=~/Pictures/Wallpapers/cyberpunk
