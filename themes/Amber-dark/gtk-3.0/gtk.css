@@ -8994,6 +8994,11 @@ combobox menu { padding: 5px; }
 menu menuitem, .csd menu menuitem, .csd .menu menuitem, .csd .context-menu menuitem { border-radius: 9999px; }
 /* zaokraglone konce podswietlenia nie nachodza na pola wyboru i ikony: wiekszy odstep z bokow */
 menu menuitem, .csd menu menuitem, .csd .menu menuitem, .csd .context-menu menuitem { padding-left: 7px; padding-right: 7px; }
+/* pola wyboru i opcje we wszystkich menu takie jak w menu Thunara */
+menu menuitem check:not(list), menu menuitem check:not(list):hover { min-width: 13px; min-height: 13px; -gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-unchecked.png")); }
+menu menuitem check:not(list):checked, menu menuitem check:not(list):checked:hover { -gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-checked.png")); }
+menu menuitem radio:not(list), menu menuitem radio:not(list):hover { min-width: 13px; min-height: 13px; -gtk-icon-source: -gtk-scaled(url("assets/radio-unchecked.png")); }
+menu menuitem radio:not(list):checked, menu menuitem radio:not(list):checked:hover { -gtk-icon-source: -gtk-scaled(url("assets/radio-checked.png")); }
 /* lista z polem: przycisk leży na polu, więc pole jest całą pigułką */
 combobox > .linked:not(.vertical) > entry:not(:only-child) { border-radius: 9999px; }
 combobox > .linked:not(.vertical) > button:not(:only-child) { border-radius: 9999px; background-color: transparent; }
