@@ -111,7 +111,9 @@ def main():
                         ("position-commands-alternate", "bool", "true"),
                         ("position-categories-alternate", "bool", "true"),
                         ("position-categories-horizontal", "bool", "false"),
-                        ("menu-width", "int", 820), ("menu-height", "int", 786)]:
+                        ("menu-width", "int", 820), ("menu-height", "int", 786),
+                        # logo MX w kolorze akcentu; kolor zalezy od nakladki ikon (Jade/Amber-Colloid)
+                        ("button-icon", "string", "mx-menu"), ("show-button-icon", "bool", "true")]:
             setp(f"{p}/{k}", t, v)
 
     print(f"PAGER={pager or 0} SYSTRAY={tray or 0} PULSE={pulse or 0} WEATHER={weather or 0} DOCK={dock or 0}")
