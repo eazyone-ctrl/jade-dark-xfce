@@ -9,6 +9,8 @@ ciemna jadeitowa zieleń, miętowe akcenty i tapety w tych kolorach.
 - **Czcionka:** JetBrains Mono wszędzie. Tekst w programach i menu ma 9 pt, tytuły okien 9 pt pogrubione,
   a terminal 10 pt. W zestawie jest też Inter (bez wariantu Display), której używa LibreWolf.
 - **Ikony:** Colloid w wariancie Teal Everforest Dark. Nakładka `Jade-Colloid` dodaje jednokolorowe ikony menu i okna Ustawień oraz małe ikony paska Thunara, a brakujące bierze z Yaru-sage-dark (pakiet `yaru-theme-icon`).
+- **Foldery:** wypełnione we wszystkich rozmiarach, także w widoku listy, a symbol zawartości (nuta, obrazek, strzałka…) jest ciemniejszy niż w Colloid, żeby był czytelny.
+- **Symbole plików (emblematy):** jednokolorowe, w kolorze nakładki i w jednej wielkości, zamiast kolorowej mieszanki z Colloid, Yaru i gnome.
 - **Tapety:** ustawiana jest „Neonowa metropolia” w kolorach motywu, w wersji komputerowej (siatka, linie ekranu, kolumny danych).
   W zestawie są też jej wersja bez efektów i oryginał oraz bursztynowe wersje.
 - **Panel:** cienki górny pasek, jak w Omarchy, z lekko przezroczystym tłem (krycie 70%). Ikony mają 16 px. Po lewej są menu, numery pulpitów i otwarte programy,
@@ -22,9 +24,12 @@ ciemna jadeitowa zieleń, miętowe akcenty i tapety w tych kolorach.
 - **Ramki w oknach:** obszary wyróżnia jaśniejsze tło zamiast linii.
 - **Zakładki i tło okien:** ciemniejsze tło okien, a aktywna zakładka z pogrubionym tekstem zlewa się z obszarem pod nią.
 - **Terminal:** schemat kolorów `Jade-dark` (też do wyboru w Preferencjach terminala), kursor blokowy, JetBrains Mono 10.
-- **Zaokrąglenia:** pola tekstowe, listy wyboru i przyciski w formie pill; okna, menu i podpowiedzi 10 px; listy i ramki 6 px;
-  pola wyboru i pozycje w menu 4 px. Pole wielowierszowe ma odstęp tekstu od ramki.
-- **Menu programów (Whisker Menu):** lista programów z ikonami 24 px i większymi odstępami, kategorie z nazwami po lewej, niskie pole wyszukiwania u góry i ramka 2 px w kolorze aktywnego okna. Kategorie i przyciski ustawień, blokady oraz wylogowania mają jednokolorowe ikony.
+- **Zaokrąglenia:** pola tekstowe, listy wyboru, przyciski i podświetlenie pozycji w menu w formie pill; okna, menu i podpowiedzi 10 px; listy i ramki 6 px;
+  pola wyboru delikatnie zaokrąglone. Pole wielowierszowe ma odstęp tekstu od ramki.
+- **Pola wyboru i opcje w menu:** we wszystkich menu takie jak w menu Thunara (zielony kwadrat z białym znacznikiem, 13 px).
+  Pola tekstowe i listy wyboru mają ramkę w kolorze przycisków i nie zmieniają wysokości po najechaniu.
+- **Menu programów (Whisker Menu):** przycisk z logo MX w kolorze akcentu (`mx-menu`), lista programów z ikonami 24 px i większymi odstępami, kategorie z nazwami po lewej, niskie pole wyszukiwania u góry i ramka 2 px w kolorze aktywnego okna. Kategorie i przyciski ustawień, blokady oraz wylogowania (ikona zasilania) mają jednokolorowe ikony; „Wszystkie programy” ma siatkę kafelków, a „Inne” własną ikonę (`config/xfce-other.directory`).
+- **Thunar:** konturowe ikony paska narzędzi, także ołówek edycji ścieżki i akcje użytkownika (Otwórz tutaj terminal, Otwórz jako root, Szukaj tutaj, Utwórz dowiązanie), które ustawia `config/uca-ikony.py`.
 - **Cień (picom):** zwykły czarny cień wokół okien. Nieaktywne okna są przygaszone o 25%.
   Podpowiedzi, panel i menu nie mają cienia, a menu GTK nie mają przezroczystej ramki wokół siebie.
 - **LED-y:** klawiatura Keychron V1 8K, mysz Corsair M75 i wentylatory na kontrolerze ASUS AURA świecą kolorem motywu (szczegóły niżej).
@@ -61,6 +66,21 @@ Po instalacji najlepiej wyloguj się i zaloguj ponownie.
 
 Skrypt sam znajduje wtyczki w panelu, więc działa także przy innym układzie panelu niż oryginalny.
 Wtyczki, których nie masz (np. pogoda), pomija, a pozostałe przesuwa na koniec panelu.
+
+## Ekran logowania i inne konta
+
+Instalator ustawia wygląd tylko dla Ciebie (`~/.themes`, `~/.local/share/icons`, `~/.local/share/fonts`).
+Ekran logowania LightDM i inne konta korzystają z katalogów systemowych, więc żeby też miały ten wygląd, skopiuj motywy, ikony i czcionki:
+
+```bash
+sudo cp -r ~/.themes/Jade-dark ~/.themes/Amber-dark ~/.themes/Jade-dark-compact ~/.themes/Amber-dark-compact /usr/share/themes/
+sudo cp -r ~/.local/share/icons/{Jade-Colloid,Amber-Colloid,Colloid-Teal-Everforest-Dark,Colloid-Teal-Everforest-Light} /usr/share/icons/
+sudo install -Dm644 -t /usr/local/share/fonts/jetbrains-mono ~/.local/share/fonts/JetBrainsMono*-*.ttf && sudo fc-cache -f
+```
+
+Potem w *Ustawienia → LightDM GTK Greeter* wybierz motyw, ikony, czcionkę `JetBrains Mono` i tapetę
+skopiowaną do `/usr/share/backgrounds` (ekran logowania nie widzi plików z katalogu domowego).
+Po każdej zmianie motywu kopiuj pliki jeszcze raz.
 
 ## Ciemne strony w LibreWolf (Dark Reader)
 

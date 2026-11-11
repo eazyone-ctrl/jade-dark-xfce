@@ -1,0 +1,3 @@
+# Pamięć podręczna Pythona (powstaje przy uruchamianiu skryptów z config/)
+__pycache__/
+*.pyc
