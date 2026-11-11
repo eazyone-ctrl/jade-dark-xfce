@@ -90,6 +90,8 @@ toolbar toolbutton button:hover { color: #9fb0a7; background-color: #1e2d27; bor
 
 .thunar check:not(list):checked {-gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-checked.png")) }
 .thunar check:not(list) {-gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox-unchecked.png")) }
+/* w menu Thunara pola wyboru sa troche mniejsze niz w oknie */
+.thunar menu menuitem check:not(list) { min-width: 13px; min-height: 13px; }
 
 
 /* Geany */

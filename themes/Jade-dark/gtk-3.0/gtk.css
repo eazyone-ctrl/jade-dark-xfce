@@ -8992,6 +8992,8 @@ menu, .menu, .context-menu { border-radius: 10px; }
 combobox menu { padding: 5px; }
 /* .csd menu menuitem z motywu zeruje zaokrąglenie, więc trzeba je ustawić z tą samą wagą */
 menu menuitem, .csd menu menuitem, .csd .menu menuitem, .csd .context-menu menuitem { border-radius: 9999px; }
+/* zaokraglone konce podswietlenia nie nachodza na pola wyboru i ikony: wiekszy odstep z bokow */
+menu menuitem, .csd menu menuitem, .csd .menu menuitem, .csd .context-menu menuitem { padding-left: 7px; padding-right: 7px; }
 /* lista z polem: przycisk leży na polu, więc pole jest całą pigułką */
 combobox > .linked:not(.vertical) > entry:not(:only-child) { border-radius: 9999px; }
 combobox > .linked:not(.vertical) > button:not(:only-child) { border-radius: 9999px; background-color: transparent; }
