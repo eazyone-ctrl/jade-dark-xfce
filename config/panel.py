@@ -95,7 +95,7 @@ def main():
         p = f"/plugins/plugin-{clock}"
         setp(f"{p}/mode", "uint", 2)
         setp(f"{p}/digital-layout", "uint", 3)
-        setp(f"{p}/digital-time-format", "string", "%A %H:%M")
+        setp(f"{p}/digital-time-format", "string", "%a %d.%m  %H:%M")
         setp(f"{p}/digital-time-font", "string", "JetBrains Mono Bold 10")
     if weather is not None:
         setp(f"/plugins/plugin-{weather}/theme-dir", "string", os.path.expanduser("~/.config/xfce4/weather/icons/jade-outline"))

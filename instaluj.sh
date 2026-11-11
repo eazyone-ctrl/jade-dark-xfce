@@ -106,6 +106,9 @@ xq xsettings /Gtk/FontName string "JetBrains Mono 9"
 xq xsettings /Gtk/MonospaceFontName string "JetBrains Mono 9"
 xq xfwm4 /general/theme string "$OKNA"
 xq xfwm4 /general/title_font string "JetBrains Mono Bold 9"
+# przyciski okna w zwyklej kolejnosci: minimalizuj, maksymalizuj, zamknij
+xq xfwm4 /general/button_layout string "O|HMC"
+xq xsettings /Gtk/DecorationLayout string "icon,menu:minimize,maximize,close"
 xfconf-query -c xfwm4 -p /general/workspace_names -n -t string -s 1 -t string -s 2 -t string -s 3 -t string -s 4 -t string -s 5 2>/dev/null ||
   xfconf-query -c xfwm4 -p /general/workspace_names -s 1 -s 2 -s 3 -s 4 -s 5
 xq thunar /misc-symbolic-icons-in-toolbar bool true

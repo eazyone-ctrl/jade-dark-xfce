@@ -12,9 +12,9 @@ ciemna jadeitowa zieleń, miętowe akcenty i tapety w tych kolorach.
 - **Tapety:** ustawiana jest „Neonowa metropolia” w kolorach motywu, w wersji komputerowej (siatka, linie ekranu, kolumny danych).
   W zestawie są też jej wersja bez efektów i oryginał oraz bursztynowe wersje.
 - **Panel:** cienki górny pasek, jak w Omarchy, z lekko przezroczystym tłem (krycie 70%). Ikony mają 16 px. Po lewej są menu, numery pulpitów i otwarte programy,
-  na środku zegar („wtorek 17:45”) i pogoda z konturowymi ikonami `jade-outline`, a po prawej dźwięk i ikony systemowe.
+  na środku zegar z datą („wt 17.11  17:45”) i pogoda z konturowymi ikonami `jade-outline`, a po prawej dźwięk i ikony systemowe.
 - **Okna:** motyw `Jade-dark-compact` z belką 28 px, rogami 10 px i ramką 2 px.
-  Aktywne okno ma nasyconą zieloną ramkę `#2cb083`, nieaktywne przygaszoną `#1a2b25`. Przyciski i tytuł mają stonowany kolor `#86948c`, po najechaniu pojawia się okrąg w tym samym kolorze, a przyciski i tytuł są wyśrodkowane na belce.
+  Aktywne okno ma nasyconą zieloną ramkę `#2cb083`, nieaktywne przygaszoną `#1a2b25`. Przyciski i tytuł mają stonowany kolor `#86948c`, po najechaniu pojawia się okrąg w tym samym kolorze, a przyciski i tytuł są wyśrodkowane na belce. Przyciski są w zwykłej kolejności: minimalizuj, maksymalizuj, zamknij.
 - **Ciemny tryb:** ciemny tryb programów zależy od koloru tła motywu.
 - **Powiadomienia i okienko głośności:** zwarte, nieprzezroczyste, z zieloną ramką i wyraźnym paskiem.
 - **Okno kończenia sesji:** małe przyciski z samym tekstem, bez ikon. Obrazy na przyciskach i w menu są wyłączone.
