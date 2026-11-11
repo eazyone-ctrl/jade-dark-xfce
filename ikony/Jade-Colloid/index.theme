@@ -3,7 +3,7 @@ Name=Jade-Colloid
 Comment=Colloid Teal Everforest Dark z jednokolorowymi ikonami menu, Thunara i Ustawien
 Inherits=Colloid-Teal-Everforest-Dark,Yaru-sage-dark,Humanity,hicolor
 Example=folder
-Directories=24x24/actions,32x32/actions,48x48/apps,scalable/actions,scalable/apps,places/scalable
+Directories=24x24/actions,32x32/actions,48x48/apps,scalable/actions,scalable/apps,places/scalable,emblems/128
 
 [24x24/actions]
 Context=Actions
@@ -37,6 +37,13 @@ Type=Scalable
 [places/scalable]
 Context=Places
 Size=64
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[emblems/128]
+Context=Emblems
+Size=128
 MinSize=8
 MaxSize=512
 Type=Scalable

@@ -3,7 +3,7 @@ Name=Amber-Colloid
 Comment=Jade-Colloid w kolorach bursztynu
 Inherits=Colloid-Teal-Everforest-Dark,Yaru-sage-dark,Humanity,hicolor
 Example=folder
-Directories=places/16,places/22,places/24,places/scalable,24x24/actions,32x32/actions,48x48/apps,scalable/actions,scalable/apps
+Directories=places/16,places/22,places/24,places/scalable,24x24/actions,32x32/actions,48x48/apps,scalable/actions,scalable/apps,emblems/128
 
 [24x24/actions]
 Context=Actions
@@ -52,6 +52,13 @@ Type=Fixed
 [places/scalable]
 Context=Places
 Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[emblems/128]
+Context=Emblems
+Size=128
 MinSize=8
 MaxSize=512
 Type=Scalable
