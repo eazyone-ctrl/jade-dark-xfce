@@ -74,3 +74,11 @@ menu, .menu, .context-menu { margin: 0; border: 1px solid #2d271e; border-radius
 /* tlo panelu z motywu, zeby zmienialo sie razem z nim */
 .xfce4-panel.background { background-color: rgba(30, 24, 15, 0.7); background-image: none; border: none; }
 /* <<< jade-horse: panel-motyw <<< */
+
+/* >>> jade-horse: thunar-panel >>> */
+/* panel boczny i widok plikow stykaja sie z krawedziami okna: proste narozniki, bez kreski miedzy nimi
+   (uchwyt zmiany szerokosci panelu dalej dziala, jest tylko niewidoczny) */
+.thunar scrolledwindow.frame, .thunar scrolledwindow.frame > *, .thunar .sidebar { border-radius: 0; }
+.thunar scrolledwindow.frame { border-left: none; border-right: none; }
+.thunar paned.horizontal > separator { background: transparent; background-image: none; box-shadow: none; }
+/* <<< jade-horse: thunar-panel <<< */
